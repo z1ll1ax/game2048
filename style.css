@@ -47,6 +47,31 @@ body{
     --color-6-bg: #a0c4ff;
 }
 
+.game-start-button{
+    position: fixed;
+    right: 20%;
+    width: 10vw;
+    min-width: 10rem;
+    background: var(--color-orange);
+    border-radius: 3rem;
+    border: none;
+    transition: all 0.15s;
+}
+.game-start-button h1{
+    text-align: center;
+    margin: 0 auto;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: var(--color-light-gray);
+    transition: all 0.15s;
+}
+.game-start-button:hover{
+    cursor: pointer;
+    background: var(--color-light-gray);
+}
+.game-start-button:hover h1{
+    color: var(--color-orange);
+}
+
 .wrapper{
     background: radial-gradient(var(--color-gray), var(--color-gray-2));
     height: 96vh;
