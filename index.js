@@ -2,7 +2,8 @@ const cellContainer = document.querySelector('.game-container');
 const cells = document.querySelectorAll('.game-cell');
 const score = document.querySelector('.score-container h1');
 const record = document.querySelector('.record-container h1');
-const startButton = document.querySelectorAll('.game-start-button');
+const startButton = document.querySelector('.game-start-button');
+const blurDiv = document.querySelector('.blur');
 
 let field = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 let gameIsON = false;
@@ -10,7 +11,8 @@ if (localStorage.getItem('record')){
     record.textContent = localStorage.getItem('record');
 }
 else record.textContent = 0;
-
+//TODO: fix ineractions, 32 32 64 0 => 128 but should be 64 64
+//TODO: game ends wrongly maybe
 document.addEventListener('keydown', function(event) {
     if (gameIsON)
         switch(event.key) {
@@ -39,15 +41,12 @@ document.addEventListener('keydown', function(event) {
 
 function StartGame(){
     score.textContent = 0;
+    blurDiv.style.display = 'none';
     RestartCells();
     RenderCells();
     SpawnCells();
     RenderCells();
     document.querySelector('.game-start-button h1').textContent = 'RESTART';
-    // if (parseInt(score.textContent) > parseInt(record.textContent)) {
-    //     //TODO: Record saving in localStorage
-    //     localStorage.setItem('record', score.textContent);
-    // }
     gameIsON = true;
 }
 function AddScore(value){
@@ -62,6 +61,7 @@ function SpawnCells(){
     }
     if (emptys.length < 2) {
         gameIsON = false;
+        blurDiv.style.display = 'block';
         if (parseInt(record.textContent) < parseInt(score.textContent)){
             record.textContent = score.textContent;
             localStorage.setItem('record', score.textContent);

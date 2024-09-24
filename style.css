@@ -1,12 +1,13 @@
 body{
     margin: 0;
     padding: 0;
+    background: radial-gradient(var(--color-gray), var(--color-gray-2));
+
 }
 
 /*
     TODO: redesign
-    TODO: fixed button start/restart
-    TODO: adaptive
+    TODO: adaptive lower 768px
 */
 :root{
     --color-light-gray: #ded6d6;
@@ -49,7 +50,7 @@ body{
 
 .game-start-button{
     position: fixed;
-    right: 20%;
+    right: 10%;
     width: 10vw;
     min-width: 10rem;
     background: var(--color-orange);
@@ -73,7 +74,6 @@ body{
 }
 
 .wrapper{
-    background: radial-gradient(var(--color-gray), var(--color-gray-2));
     height: 96vh;
     padding-top: 4vh;
 }
@@ -108,7 +108,31 @@ body{
     margin: 0;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
-
+.main-container{
+    width: 31rem;
+    height: 31rem;
+    margin: 0 auto;
+    position: relative;
+}
+.blur{
+    display: none;
+    width: 32rem;
+    height: 32rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 3rem;
+    position: absolute;
+    z-index: 1;
+}
+.blur h1{
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 3rem;
+    margin-top: 42%;
+    color: transparent;
+    -webkit-text-stroke: var(--color-light-gray) 0.02rem;
+    z-index: 5;
+}
 .game-container{
     margin: 0 auto;
     background-color: var(--color-light-gray-2);
@@ -120,6 +144,7 @@ body{
     grid-template-columns: 5.5rem 5.5rem 5.5rem 5.5rem;
     column-gap: 1rem;
     row-gap: 1rem;
+    position: absolute;
     border: var(--color-light-gray) solid 0.5rem;
     border-radius: 3rem;
 }
@@ -136,6 +161,32 @@ body{
     margin: 0 auto;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
+footer{
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.footer-container{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.4rem;
+    text-decoration: none;
+}
+footer img{
+    width: 1.5rem;
+}
+footer h4{
+    color: var(--color-light-gray);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0;
+}
+
+
 #n0{
     border-color: var(--color-light-gray);
     background-color: transparent;
