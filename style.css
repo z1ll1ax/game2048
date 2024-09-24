@@ -96,18 +96,6 @@ body{
     margin-right: 5%;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
-/* #h2{
-    color: var(--color-red);
-}
-#h0{
-    color: var(--color-green);
-}
-#h4{
-    color: var(--color-4);
-}
-#h8{
-    color: var(--color-cyan);
-} */
 .score-container, .record-container{
     width: 40%;
     display: flex;
