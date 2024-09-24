@@ -6,6 +6,10 @@ const startButton = document.querySelectorAll('.game-start-button');
 
 let field = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 let gameIsON = false;
+if (localStorage.getItem('record')){
+    record.textContent = localStorage.getItem('record');
+}
+else record.textContent = 0;
 
 document.addEventListener('keydown', function(event) {
     if (gameIsON)
@@ -33,33 +37,6 @@ document.addEventListener('keydown', function(event) {
         }
 });
 
-// document.addEventListener('keyup', function(event) {
-//     switch(event.key) {
-//         case 'w':
-//         case 'W':
-//         case 'ArrowUp':
-//             console.log('Stop moving up');
-//             break;
-//         case 'a':
-//         case 'A':
-//         case 'ArrowLeft':
-//             console.log('Stop moving left');
-//             break;
-//         case 's':
-//         case 'S':
-//         case 'ArrowDown':
-//             console.log('Stop moving down');
-//             break;
-//         case 'd':
-//         case 'D':
-//         case 'ArrowRight':
-//             console.log('Stop moving right');
-//             break;
-//         default:
-//             // Do nothing for other keys
-//     }
-// });
-
 function StartGame(){
     score.textContent = 0;
     RestartCells();
@@ -67,10 +44,14 @@ function StartGame(){
     SpawnCells();
     RenderCells();
     document.querySelector('.game-start-button h1').textContent = 'RESTART';
-    if (score.textContent > record.textContent) {
-        //TODO: Record saving in localStorage
-    }
+    // if (parseInt(score.textContent) > parseInt(record.textContent)) {
+    //     //TODO: Record saving in localStorage
+    //     localStorage.setItem('record', score.textContent);
+    // }
     gameIsON = true;
+}
+function AddScore(value){
+    score.textContent = parseInt(score.textContent) + value;
 }
 function SpawnCells(){
     let emptys = [];
@@ -80,8 +61,12 @@ function SpawnCells(){
         }
     }
     if (emptys.length < 2) {
+        gameIsON = false;
+        if (parseInt(record.textContent) < parseInt(score.textContent)){
+            record.textContent = score.textContent;
+            localStorage.setItem('record', score.textContent);
+        }
         return;
-        //TODO: LOSE HERE
     }
     let temp = Math.floor(Math.random() * emptys.length);
     let temp2 = Math.floor(Math.random() * emptys.length);
@@ -120,6 +105,7 @@ function MoveUp(){
         for (let j = 0; j < 3; j++){
             if (field[i][j] !== undefined && field[i][j] === field[i][j + 1]){
                 field[i][j] *= 2;
+                AddScore(field[i][j]);
                 field[i].splice(j + 1, 1);
             }
         }
@@ -137,6 +123,7 @@ function MoveDown(){
         for (let j = 3; j > 0; j--){
             if (field[i][j] !== undefined && field[i][j] === field[i][j - 1]){
                 field[i][j] *= 2;
+                AddScore(field[i][j]);
                 field[i].splice(j - 1, 1);
             }
         }
@@ -153,6 +140,7 @@ function MoveLeft(){
         for (let j = 0; j < 3; j++){
             if (field[i][j] !== undefined && field[i][j] === field[i][j + 1]){
                 field[i][j] *= 2;
+                AddScore(field[i][j]);
                 field[i].splice(j + 1, 1);
             }
         }
@@ -169,6 +157,7 @@ function MoveRight(){
         for (let j = 3; j > 0; j--){
             if (field[i][j] !== undefined && field[i][j] === field[i][j - 1]){
                 field[i][j] *= 2;
+                AddScore(field[i][j]);
                 field[i].splice(j - 1, 1);
             }
         }
