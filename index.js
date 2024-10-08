@@ -52,29 +52,44 @@ function StartGame(){
 function AddScore(value){
     score.textContent = parseInt(score.textContent) + value;
 }
-function SpawnCells(){
+function getEmptys(){
     let emptys = [];
     for (let i = 0; i < 4; i++){
         for (let j = 0; j < 4; j++){
             if (field[i][j] === 0) emptys.push([i, j]);
         }
     }
-    if (emptys.length < 2) {
-        gameIsON = false;
-        blurDiv.style.display = 'block';
-        if (parseInt(record.textContent) < parseInt(score.textContent)){
-            record.textContent = score.textContent;
-            localStorage.setItem('record', score.textContent);
+    return emptys;
+}
+function getEmptysSizePositive(){
+    let emptys = [];
+    for (let i = 0; i < 4; i++){
+        for (let j = 0; j < 4; j++){
+            if (field[i][j] === 0) return true;
         }
-        return;
     }
-    let temp = Math.floor(Math.random() * emptys.length);
-    let temp2 = Math.floor(Math.random() * emptys.length);
-    while (temp === temp2) {
-        temp2 = Math.floor(Math.random() * emptys.length);
+    return false;
+}
+function SpawnCells(){
+    let emptys = getEmptys();
+    switch (true){
+        case emptys.length < 1: return;
+        case emptys.length >= 2:
+            let temp = Math.floor(Math.random() * emptys.length);
+            let temp2 = Math.floor(Math.random() * emptys.length);
+            while (temp === temp2) {
+                temp2 = Math.floor(Math.random() * emptys.length);
+            }
+            RewriteCell(emptys[temp][0] * 4 + emptys[temp][1], 2);
+            RewriteCell(emptys[temp2][0] * 4 + emptys[temp2][1], 2);
+            break;
+        case (emptys.length === 1):
+            let temp3 = Math.floor(Math.random() * emptys.length);
+            RewriteCell(emptys[temp3][0] * 4 + emptys[temp3][1], 2);
+            break;
+        default:
+           return;
     }
-    RewriteCell(emptys[temp][0] * 4 + emptys[temp][1], 2);
-    RewriteCell(emptys[temp2][0] * 4 + emptys[temp2][1], 2);
 }
 function RenderCells(){
     for(let i = 0; i < cells.length; i++){
@@ -97,72 +112,117 @@ function RestartCells(){
 function transpose(matrix) {
     return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
 }
-function MoveUp(){
-    console.log('up');
-    field = transpose(field);
-    for (let i = 0; i < 4; i++){
-        field[i] = field[i].filter((element) => element !== 0);
-        for (let j = 0; j < 3; j++){
-            if (field[i][j] !== undefined && field[i][j] === field[i][j + 1]){
-                field[i][j] *= 2;
-                AddScore(field[i][j]);
-                field[i].splice(j + 1, 1);
+function arraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+        if (Array.isArray(arr1[i]) && Array.isArray(arr2[i])) {
+            if (!arraysEqual(arr1[i], arr2[i])) {
+                return false;
+            }
+        } else {
+            if (arr1[i] !== arr2[i]) {
+                return false;
             }
         }
-        while (field[i].length < 4) field[i].push(0);
     }
-    field = transpose(field);
+    return true;
+}
+function MoveUp(){
+    console.log('up');
+    let newField = Up();
+    if (arraysEqual(newField, field) && !getEmptysSizePositive()){
+        isLose();
+        return;
+    }
+    field = newField;
     SpawnCells();
     RenderCells();
+}
+function Up(){
+    field = transpose(field);
+    let newField = Left();
+    field = transpose(field);
+    newField = transpose(newField);
+    return newField;
 }
 function MoveDown(){
     console.log('d');
-    field = transpose(field);
-    for (let i = 0; i < 4; i++){
-        field[i] = field[i].filter((element) => element !== 0);
-        for (let j = 3; j > 0; j--){
-            if (field[i][j] !== undefined && field[i][j] === field[i][j - 1]){
-                field[i][j] *= 2;
-                AddScore(field[i][j]);
-                field[i].splice(j - 1, 1);
-            }
-        }
-        while (field[i].length < 4) field[i].unshift(0);
+    let newField = Down();
+    if (arraysEqual(newField, field) && !getEmptysSizePositive()){
+        isLose();
+        return;
     }
-    field = transpose(field);
+    field = newField;
     SpawnCells();
     RenderCells();
+}
+function Down(){
+    field = transpose(field);
+    let newField = Right();
+    field = transpose(field);
+    newField = transpose(newField);
+    return newField;
 }
 function MoveLeft(){
     console.log('l');
-    for (let i = 0; i < 4; i++){
-        field[i] = field[i].filter((element) => element !== 0);
-        for (let j = 0; j < 3; j++){
-            if (field[i][j] !== undefined && field[i][j] === field[i][j + 1]){
-                field[i][j] *= 2;
-                AddScore(field[i][j]);
-                field[i].splice(j + 1, 1);
-            }
-        }
-        while (field[i].length < 4) field[i].push(0);
+    let newField = Left();
+    if (arraysEqual(newField, field) && !getEmptysSizePositive()){
+        isLose();
+        return;
     }
+    field = newField;
     SpawnCells();
     RenderCells();
 }
-
-function MoveRight(){
-    console.log('r');
+function Left(){
+    let tempField = [...field];
     for (let i = 0; i < 4; i++){
-        field[i] = field[i].filter((element) => element !== 0);
-        for (let j = 3; j > 0; j--){
-            if (field[i][j] !== undefined && field[i][j] === field[i][j - 1]){
-                field[i][j] *= 2;
-                AddScore(field[i][j]);
-                field[i].splice(j - 1, 1);
+        tempField[i] = tempField[i].filter((element) => element !== 0);
+        for (let j = 0; j < 3; j++){
+            if (tempField[i][j] !== undefined && tempField[i][j] === tempField[i][j + 1]){
+                tempField[i][j] *= 2;
+                AddScore(tempField[i][j]);
+                tempField[i].splice(j + 1, 1);
             }
         }
-        while (field[i].length < 4) field[i].unshift(0);
+        while (tempField[i].length < 4) tempField[i].push(0);
     }
+    return tempField;
+}
+function MoveRight(){
+    console.log('r');
+    let newField = Right();
+    if (arraysEqual(newField, field) && !getEmptysSizePositive()){
+        isLose();
+        return;
+    }
+    field = newField;
     SpawnCells();
     RenderCells();
+}
+function Right(){
+    let tempField = [...field];
+    for (let i = 0; i < 4; i++){
+        tempField[i] = tempField[i].filter((element) => element !== 0);
+        for (let j = 3; j > 0; j--){
+            if (tempField[i][j] !== undefined && tempField[i][j] === tempField[i][j - 1]){
+                tempField[i][j] *= 2;
+                AddScore(tempField[i][j]);
+                tempField[i].splice(j - 1, 1);
+            }
+        }
+        while (tempField[i].length < 4) tempField[i].unshift(0);
+    }
+    return tempField;
+}
+function isLose(){
+    if (arraysEqual(Up(), field) && arraysEqual(Down(), field) &&
+            arraysEqual(Left(), field) && arraysEqual(Right(), field)){
+        gameIsON = false;
+        blurDiv.style.display = 'block';
+        if (parseInt(record.textContent) < parseInt(score.textContent)){
+            record.textContent = score.textContent;
+            localStorage.setItem('record', score.textContent);
+        }
+    }
 }
