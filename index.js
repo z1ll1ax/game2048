@@ -7,12 +7,16 @@ const blurDiv = document.querySelector('.blur');
 
 let field = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 let gameIsON = false;
+let popSound = new Audio();
+let loseSound = new Audio();
+popSound.src = 'assets/pop-sound.mp3';
+loseSound.src = 'assets/josh-hutcherson-whistle.mp3';
+
 if (localStorage.getItem('record')){
     record.textContent = localStorage.getItem('record');
 }
 else record.textContent = 0;
-//TODO: fix ineractions, 32 32 64 0 => 128 but should be 64 64
-//TODO: game ends wrongly maybe
+
 document.addEventListener('keydown', function(event) {
     if (gameIsON)
         switch(event.key) {
@@ -40,6 +44,14 @@ document.addEventListener('keydown', function(event) {
 });
 
 function StartGame(){
+    popSound.pause();
+    popSound.currentTime = 0;
+    loseSound.pause();
+    loseSound.currentTime = 0;
+    if (parseInt(record.textContent) < parseInt(score.textContent)){
+        record.textContent = score.textContent;
+        localStorage.setItem('record', score.textContent);
+    }
     score.textContent = 0;
     blurDiv.style.display = 'none';
     RestartCells();
@@ -139,6 +151,7 @@ function MoveUp(){
     RenderCells();
 }
 function Up(){
+    popSound.play();
     field = transpose(field);
     let newField = Left();
     field = transpose(field);
@@ -176,17 +189,21 @@ function MoveLeft(){
 }
 function Left(){
     let tempField = [...field];
+    let isMerged = false;
     for (let i = 0; i < 4; i++){
         tempField[i] = tempField[i].filter((element) => element !== 0);
         for (let j = 0; j < 3; j++){
             if (tempField[i][j] !== undefined && tempField[i][j] === tempField[i][j + 1]){
+                console.log(tempField[i][j] + ' ' + tempField[i][j+1] + ' ' + i + ' ' + j)
                 tempField[i][j] *= 2;
+                isMerged = true;
                 AddScore(tempField[i][j]);
                 tempField[i].splice(j + 1, 1);
             }
         }
         while (tempField[i].length < 4) tempField[i].push(0);
     }
+    if (isMerged) popSound.play();
     return tempField;
 }
 function MoveRight(){
@@ -202,23 +219,31 @@ function MoveRight(){
 }
 function Right(){
     let tempField = [...field];
+    let isMerged = false;
     for (let i = 0; i < 4; i++){
         tempField[i] = tempField[i].filter((element) => element !== 0);
         for (let j = 3; j > 0; j--){
             if (tempField[i][j] !== undefined && tempField[i][j] === tempField[i][j - 1]){
                 tempField[i][j] *= 2;
+                isMerged = true;
                 AddScore(tempField[i][j]);
                 tempField[i].splice(j - 1, 1);
             }
         }
         while (tempField[i].length < 4) tempField[i].unshift(0);
     }
+    if (isMerged) popSound.play();
     return tempField;
 }
 function isLose(){
-    if (arraysEqual(Up(), field) && arraysEqual(Down(), field) &&
-            arraysEqual(Left(), field) && arraysEqual(Right(), field)){
+    console.log(field);
+    console.log(Up());
+    console.log(Down());
+    console.log(Left());
+    console.log(Right());
+    if (arraysEqual(Up(), field) && arraysEqual(Left(), field)){
         gameIsON = false;
+        loseSound.play();
         blurDiv.style.display = 'block';
         if (parseInt(record.textContent) < parseInt(score.textContent)){
             record.textContent = score.textContent;

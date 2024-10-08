@@ -56,6 +56,7 @@ body{
     background: var(--color-orange);
     border-radius: 3rem;
     border: none;
+    z-index: 100;
     transition: all 0.15s;
 }
 .game-start-button h1{
@@ -118,20 +119,24 @@ body{
     display: none;
     width: 32rem;
     height: 32rem;
-    background: rgba(0, 0, 0, 0.6);
+    background-image: url('assets/imgs/lose.jpg');
+    opacity: 0.6;
+    background-size: cover;
+    background-position: center;
     border: none;
     border-radius: 3rem;
     position: absolute;
-    z-index: 1;
+    z-index: 5;
 }
 .blur h1{
     text-align: center;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size: 3rem;
     margin-top: 42%;
-    color: transparent;
-    -webkit-text-stroke: var(--color-light-gray) 0.02rem;
-    z-index: 5;
+    color: var(--color-light-gray);
+    -webkit-text-stroke: var(--color-gray-2) 0.05rem;
+    opacity: 1;
+    z-index: 10;
 }
 .game-container{
     margin: 0 auto;
@@ -181,7 +186,7 @@ footer img{
     width: 1.5rem;
 }
 footer h4{
-    color: var(--color-light-gray);
+    color: var(--color-orange-bg);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     margin: 0;
 }
