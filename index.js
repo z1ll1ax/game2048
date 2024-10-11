@@ -99,7 +99,10 @@ function SpawnCell(){
 }
 function RenderCells(){
     for(let i = 0; i < cells.length; i++){
-        cells[i].id = `n${field.flat()[i]}`;
+        if (field.flat()[i] >= 65536) {
+            cells[i].id = `n65536plus`;
+        }
+        else cells[i].id = `n${field.flat()[i]}`;
         if (field.flat()[i] === 0)  cells[i].innerHTML = `<h3></h3>`
         else cells[i].innerHTML = `<h3>${field.flat()[i]}</h3>`;
     }

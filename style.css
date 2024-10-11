@@ -5,10 +5,6 @@ body{
 
 }
 
-/*
-    TODO: redesign
-    TODO: adaptive lower 768px
-*/
 :root{
     --color-light-gray: #ded6d6;
     --color-gray: #a0a0a0;
@@ -317,7 +313,7 @@ th, td{
     background-color: var(--color-5-bg);
 }
 #n65536plus{
-    font-size: 1.2rem;
+    font-size: 0.7rem;
     color: var(--color-black);
     border-color: var(--color-black);
     background-color: var(--color-black-bg);
