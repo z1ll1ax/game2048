@@ -4,8 +4,10 @@ const score = document.querySelector('.score-container h1');
 const record = document.querySelector('.record-container h1');
 const startButton = document.querySelector('.game-start-button');
 const blurDiv = document.querySelector('.blur');
+const tableScores = document.querySelectorAll('.table-score');
 
 let field = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+let lastScores = localStorage.getItem('lastTenScores');
 let gameIsON = false;
 let popSound = new Audio();
 let loseSound = new Audio();
@@ -16,7 +18,13 @@ if (localStorage.getItem('record')){
     record.textContent = localStorage.getItem('record');
 }
 else record.textContent = 0;
-
+if (!lastScores){
+    lastScores = [];
+}
+else {
+    lastScores = lastScores.split(',');
+    RenderLastTenScores();
+}
 document.addEventListener('keydown', function(event) {
     if (gameIsON)
         switch(event.key) {
@@ -225,5 +233,15 @@ function isLose(){
             record.textContent = score.textContent;
             localStorage.setItem('record', score.textContent);
         }
+        lastScores.push(parseInt(score.textContent));
+        lastScores = lastScores.slice(-10);
+        localStorage.setItem('lastTenScores', lastScores);
+        RenderLastTenScores();
+    }
+}
+
+function RenderLastTenScores(){
+    for (let i = 0; i < lastScores.length || i < 10; i++){
+        tableScores[i].textContent = lastScores[i];
     }
 }
