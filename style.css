@@ -75,7 +75,6 @@ body{
 }
 
 .wrapper{
-    height: 96vh;
     padding-top: 4vh;
 }
 .header-container{
@@ -191,6 +190,37 @@ footer h4{
     margin: 0;
 }
 
+.table-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.table-wrapper h1{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 2rem;
+    color: var(--color-light-gray);
+    text-align: center;
+    margin-top: 5rem;
+    margin-bottom: 0.5rem;
+}
+table{
+    align-self: center;
+    border-collapse: collapse;
+    max-width: 40%;
+}
+table, th, td {
+    border: 0.4rem solid var(--color-light-gray);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 2rem;
+    color: var(--color-light-gray);
+    margin-bottom: 3rem;
+}
+th, td{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    text-align: center;
+}
+  
 
 #n0{
     border-color: var(--color-light-gray);
