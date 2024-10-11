@@ -55,8 +55,7 @@ function StartGame(){
     score.textContent = 0;
     blurDiv.style.display = 'none';
     RestartCells();
-    RenderCells();
-    SpawnCells();
+    SpawnCell();
     RenderCells();
     document.querySelector('.game-start-button h1').textContent = 'RESTART';
     gameIsON = true;
@@ -82,25 +81,12 @@ function getEmptysSizePositive(){
     }
     return false;
 }
-function SpawnCells(){
+function SpawnCell(){
     let emptys = getEmptys();
-    switch (true){
-        case emptys.length < 1: return;
-        case emptys.length >= 2:
-            let temp = Math.floor(Math.random() * emptys.length);
-            let temp2 = Math.floor(Math.random() * emptys.length);
-            while (temp === temp2) {
-                temp2 = Math.floor(Math.random() * emptys.length);
-            }
-            RewriteCell(emptys[temp][0] * 4 + emptys[temp][1], 2);
-            RewriteCell(emptys[temp2][0] * 4 + emptys[temp2][1], 2);
-            break;
-        case (emptys.length === 1):
-            let temp3 = Math.floor(Math.random() * emptys.length);
-            RewriteCell(emptys[temp3][0] * 4 + emptys[temp3][1], 2);
-            break;
-        default:
-           return;
+    if (emptys.length > 0){
+        let temp = Math.floor(Math.random() * emptys.length); // which cell
+        let multiplier = (Math.floor(Math.random() * 2) + 1) * 2; //2 or 4
+        RewriteCell(emptys[temp][0] * 4 + emptys[temp][1], multiplier);
     }
 }
 function RenderCells(){
@@ -140,84 +126,79 @@ function arraysEqual(arr1, arr2) {
     return true;
 }
 function MoveUp(){
-    console.log('up');
-    let newField = Up();
+    let newField = Up(true);
     if (arraysEqual(newField, field) && !getEmptysSizePositive()){
         isLose();
         return;
     }
     field = newField;
-    SpawnCells();
+    SpawnCell();
     RenderCells();
 }
-function Up(){
-    popSound.play();
+function Up(isMovedByPlayer){
     field = transpose(field);
-    let newField = Left();
+    let newField = Left(isMovedByPlayer);
     field = transpose(field);
     newField = transpose(newField);
     return newField;
 }
 function MoveDown(){
-    console.log('d');
-    let newField = Down();
+    let newField = Down(true);
     if (arraysEqual(newField, field) && !getEmptysSizePositive()){
         isLose();
         return;
     }
     field = newField;
-    SpawnCells();
+    SpawnCell();
     RenderCells();
 }
-function Down(){
+function Down(isMovedByPlayer){
     field = transpose(field);
-    let newField = Right();
+    let newField = Right(isMovedByPlayer);
     field = transpose(field);
     newField = transpose(newField);
     return newField;
 }
 function MoveLeft(){
-    console.log('l');
-    let newField = Left();
+    let newField = Left(true);
     if (arraysEqual(newField, field) && !getEmptysSizePositive()){
         isLose();
         return;
     }
     field = newField;
-    SpawnCells();
+    SpawnCell();
     RenderCells();
 }
-function Left(){
+function Left(isMovedByPlayer){
     let tempField = [...field];
     let isMerged = false;
     for (let i = 0; i < 4; i++){
         tempField[i] = tempField[i].filter((element) => element !== 0);
         for (let j = 0; j < 3; j++){
-            if (tempField[i][j] !== undefined && tempField[i][j] === tempField[i][j + 1]){
-                console.log(tempField[i][j] + ' ' + tempField[i][j+1] + ' ' + i + ' ' + j)
+            if (tempField[i][j] !== undefined 
+                && tempField[i][j] === tempField[i][j + 1]){
                 tempField[i][j] *= 2;
                 isMerged = true;
-                AddScore(tempField[i][j]);
+                if (isMovedByPlayer) AddScore(tempField[i][j]);
                 tempField[i].splice(j + 1, 1);
             }
         }
         while (tempField[i].length < 4) tempField[i].push(0);
     }
-    if (isMerged) popSound.play();
+    if (isMerged && isMovedByPlayer) popSound.play();
     return tempField;
 }
 function MoveRight(){
-    console.log('r');
-    let newField = Right();
+    let newField = Right(true);
     if (arraysEqual(newField, field) && !getEmptysSizePositive()){
         isLose();
         return;
     }
     field = newField;
-    SpawnCells();
+    SpawnCell();
     RenderCells();
 }
-function Right(){
+function Right(isMovedByPlayer){
     let tempField = [...field];
     let isMerged = false;
     for (let i = 0; i < 4; i++){
@@ -226,22 +207,17 @@ function Right(){
             if (tempField[i][j] !== undefined && tempField[i][j] === tempField[i][j - 1]){
                 tempField[i][j] *= 2;
                 isMerged = true;
-                AddScore(tempField[i][j]);
+                if (isMovedByPlayer) AddScore(tempField[i][j]);
                 tempField[i].splice(j - 1, 1);
             }
         }
         while (tempField[i].length < 4) tempField[i].unshift(0);
     }
-    if (isMerged) popSound.play();
+    if (isMerged && isMovedByPlayer) popSound.play();
     return tempField;
 }
 function isLose(){
-    console.log(field);
-    console.log(Up());
-    console.log(Down());
-    console.log(Left());
-    console.log(Right());
-    if (arraysEqual(Up(), field) && arraysEqual(Left(), field)){
+    if (arraysEqual(Up(false), field) && arraysEqual(Left(false), field)){
         gameIsON = false;
         loseSound.play();
         blurDiv.style.display = 'block';
